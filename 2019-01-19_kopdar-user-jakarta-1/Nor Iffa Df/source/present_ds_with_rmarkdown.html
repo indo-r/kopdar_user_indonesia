@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Present your Data Science Project</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Nor Iffa DF" />
+    <link href="libs/remark-css/tamu-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css/tamu.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Present your Data Science Project
+## <br/>with <code>Rmarkdown</code>
+### Nor Iffa DF
+### 2019/01/13
+
+---
+
+
+
+
+class: center, middle, inverse
+
+![](images/rmarkdown.png)
+
+Image credit: [rmarkdown package](https://bookdown.org/yihui/rmarkdown/)
+
+---
+class: inverse
+
+# `rmarkdown`
+
+R has excellent utilities for reporting and communication including `rmarkdown` (a method for integrating code, graphical output, and text into a journal-quality report) and Shiny.
+
+To install the rmarkdown package in R:
+
+
+```r
+# Install from CRAN
+install.packages('rmarkdown')
+
+# install from GitHub
+devtools::install_github('rstudio/rmarkdown')
+```
+
+
+## [RStudio Formats](https://rmarkdown.rstudio.com/formats.html)
+- Documents (PDF, HTML, Notebook, Word)
+- Presentation (ioslides, reveal.js, Slidy, Powerpoint)
+- Journals (JSS, ACM, ACS, ctex, Elvesiers Journal)
+- Shiny
+- More (flexdashboard, bookdown, blogdown, tufte)
+
+---
+
+class: inverse
+
+# Quick intro `rmarkdown`
+
+- Create a new R markdown from the menu `File -&gt; New File -&gt; R Markdown`
+
+&lt;img src="images/rr.png" width="auto" height="450" align= "center"/&gt;
+
+---
+class: inverse
+
+# Rpubs 
+- If you dont want to publish a whole website
+- You can just publish r markdown html output to Rpubs
+
+
+[Example: http://rpubs.com/niffadf16/first_rmd](http://rpubs.com/niffadf16/first_rmd)
+
+&lt;img src="images/rpubs.png" width="auto" height="450" align= "center"/&gt;
+
+
+
+---
+class: inverse
+
+# Examples
+
+- Airbnb uses R Markdown to document all their analyses in R, so they can combine code and data visualizations in a single report. [Bion, Chang, and Goodman 2018](https://doi.org/10.1080/00031305.2017.1392362.)
+
+- Writing blog using `blogdown`  Rob J Hyndman’s personal website: https://robjhyndman.com (a very comprehensive academic website)
+
+- This slide.
+
+---
+
+class: center, middle, inverse
+
+# Keep in touch
+
+
+&lt;a href="mailto:niffadf@gmail.com"&gt;&lt;i class="fa fa-paper-plane fa-fw"&gt;&lt;/i&gt;&amp;nbsp; niffadf@gmail.com&lt;/a&gt;&lt;br&gt;
+&lt;a href="http://github.com/niffadf"&gt;&lt;i class="fa fa-github fa-fw"&gt;&lt;/i&gt;&amp;nbsp; @niffadf&lt;/a&gt;&lt;br&gt;
+
+---
+
+class: center, middle, inverse
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
