@@ -18,7 +18,7 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 ### 2019-03-23 Kopdar useR! Jakarta 2 @ Perbanas Institute
 * [Introduction to Time Series: A Story of decomposition function](https://slides.com/bobbygulliano/deck/fullscreen) oleh Bobby Gulliano
 * [R For Everyone:Basic Computational Journalism with R - Text Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-03-23_kopdar_user_jakarta-2/Raden%20Muhammad%20Hadi/R%20For%20Everyone_%20Basic%20Computational%20Journalism%20with%20R%20-%20Text%20Analysis.pdf) oleh Raden Muhammad Hadi
-* oleh Muhammad Aswan Syahputra
+* [Let’s build your first RStudio snippets and addins!](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-03-23_kopdar_user_jakarta-2/Muhammad%20Aswan%20Syahputra/snippets_addins.pdf) oleh Muhammad Aswan Syahputra
 
 ### 2019-05-11 Kopdar useR! Jakarta 3 @ Algoritma Education Center
 * [R for Bioinformatics](https://github.com/indo-r/kopdar_user_indonesia/tree/master/2019-05-11_kopdar_user_jakarta-3/Setia%20Pramana) oleh Setia Pramana
