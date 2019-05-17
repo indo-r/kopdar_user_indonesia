@@ -25,4 +25,4 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 * [Data Carpentry with Tidyverse](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-11_kopdar_user_jakarta-3/Muhammad%20Aswan%20Syahputra/data-carpentry-with-tidyverse.pdf) oleh Muhammad Aswan Syahputra
 
 ### 2019-05-18 Kopdar useR! Bogor 1 @ Institut Pertanian Bogor
-* [R untuk Eksplorasi Data Biodiversitas](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-16_kopdar_user_bogor-1/Sabhrina%20Gita%20Aninta/presentasi_eksplorasiDataBiodiversitas.pdf) oleh Sabhrina Gita Aninta
+* [R untuk Eksplorasi Data Biodiversitas](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-18_kopdar_user_bogor-1/Sabhrina%20Gita%20Aninta/presentasi_eksplorasiDataBiodiversitas.pdf) oleh Sabhrina Gita Aninta
