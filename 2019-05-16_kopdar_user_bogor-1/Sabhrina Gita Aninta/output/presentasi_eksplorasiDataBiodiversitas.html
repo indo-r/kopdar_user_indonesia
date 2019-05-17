@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>R untuk Eksplorasi Data Biodiversitas</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sabhrina Gita Aninta" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title-slide-custom
+
+&lt;div class="my-logo-right"&gt;&lt;/div&gt; 
+
+&lt;style type="text/css"&gt;
+.my-logo-right {
+content: "";
+    position: absolute;
+    top: 15px;
+    right:   8px;
+    height: 40px;
+    width: 120px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png);
+}
+
+.title-slide-custom .remark-slide-number {
+  display: none;
+}
+&lt;/style&gt;
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+# R untuk Eksplorasi Data Biodiversitas
+
+&lt;br&gt;&lt;br&gt; 
+## Sabhrina Gita Aninta
+### Tambora Muda Indonesia / Komunitas R Indonesia
+### 2019/05/16 (updated: 2019-05-17)
+
+---
+# Teknis tutorial
+
+Silakan memulai dari membuka project baru dari Rstudio:
+
+&gt; File - New Project... - New Directory - New Project
+
+&lt;img src="images/newproject.PNG" width="50%" /&gt;
+
+Pilih lokasi proyek dan tulis nama folder yang jadi lokasi proyek sesuka Anda, lalu klik `Create Project`.
+
+---
+
+# Teknis tutorial
+
+Sesi baru untuk tempat Anda melakukan proyek akan terbuka, lalu Anda dapat membuka skrip R baru untuk menulis kode R Anda
+
+.pull-left[
+![](images/rscript_menu.PNG)
+]
+
+.pull-right[
+![](images/newscript.PNG)
+]
+
+Jangan lupa menyimpan skrip Anda sebelum memulai menuliskan kode.
+
+Ikuti tutorial dengan mengetikkan kode yang dipresentasikan dalam skrip Anda.
+
+---
+
+class: center, middle, bottom
+
+![](images/biodiversity.jpg)
+
+# Memperoleh Data Biodiversitas
+
+???
+
+Image source: [Clipart Library](http://clipart-library.com/clipart/241546.htm)
+
+---
+
+# Apa itu Data Biodiversitas?
+
+&lt;br&gt;&lt;br&gt;
+Kata "biodiversitas" dalam bahasa Indonesia baku umum dikenal dalam frase "keanekaragaman hayati" atau disingkat "kehati".
+
+--
+
+Meski tidak baku, kata "biodiversitas" lebih populer di kalangan praktisi dibandingkan "kehati" yang lebih umum digunakan di lingkungan pemerintah.
+
+--
+
+Data biodiversitas ada berbagai macam:
+
+--
+
+- perjumpaan (*occurrence*)
+
+--
+
+- sekuen DNA/RNA/protein
+
+--
+
+- karakter morfologi dan fisiologi
+
+---
+
+# Mengapa data biodiversitas?
+
+&lt;br&gt;&lt;br&gt;
+
+.pull-left[
+Seluruh hidup kita bergantung kepada biodiversitas:
+
+- air bersih
+
+
+- udara bersih
+
+
+- makanan
+
+- tempat tinggal
+
+- kesehatan
+]
+
+.pull-right[
+![](http://www.fao.org/fileadmin/user_upload/faowater/images/newpubs/IES1b.jpg)
+]
+
+--
+
+Manajemen biodiversitas yang baik memerlukan manajemen data biodiversitas yang baik.
+
+---
+
+# Pangkalan data (*database*) kehati
+
+&lt;br&gt;&lt;br&gt;
+Era informasi memungkinkan (dan menuntut) kita memanajemen informasi dengan sistematis dan integratif agar data dapat diakses dan digunakan kembali oleh banyak orang.
+
+--
+
+Berbagai pangkalan data kehati tersebar di dalam jaringan:
+
+--
+
+- Global Biodiversity Information Facility ( [GBIF](https://www.gbif.org) )
+
+--
+
+- Global database of biodiversity time series ( [BioTIME](http://biotime.st-andrews.ac.uk) )
+
+--
+
+- An Anthropocene map of genetic diversity ( [iMapGenes](https://macroecology.ku.dk/resources/imapgenes) )
+
+--
+
+Yang lokal:
+
+--
+
+- [Indonesian Biodiversity Information Facility](http://inabif.lipi.go.id)
+
+--
+
+- [Biodiverskripsi](https://biodiverskripsi.org)
+
+--
+
+- [Atlas Burung Indonesia](http://atlasburung.web.id)
+
+---
+
+# Komponen data kehati
+
+&lt;br&gt;&lt;br&gt;
+Data kehati memiliki berbagai macam atribut:
+
+--
+
+- ID unik
+
+--
+
+- nama spesies (*binomial nomenclature*, contoh: *Oryza sativa*, *Gecko gecko*, dll.)
+
+--
+
+- lokasi perjumpaan (koordinat, nama daerah, dll.)
+
+--
+
+- waktu perjumpaan (tanggal, jam, tahun, dll.)
+
+--
+
+- kuantitas organisme (jumlah individu, biomassa, OTU, dll.)
+
+--
+
+- data abiotik pendukung (suhu, kondisi tanah, cahaya)
+
+--
+
+- data organisme lain yang berkaitan (biomassa vegetasi, kelimpahan parasit, dll.)
+
+
+---
+
+# Unduh data dari pangkalan
+
+Beberapa pangkalan menyediakan data yang langsung dapat diunduh dari dalam jaringan setelah pengguna melakukan *log in*.
+
+--
+
+GBIF memiliki API yang dapat digunakan via R.
+
+--
+
+
+```r
+library(rgbif)
+
+## mencari data perjumpaan
+occ_search(scientificName = "Bubalus", country = "ID", limit = 20)
+buffaloID&lt;-occ_search(scientificName = "Bubalus", country = "ID")
+summary(buffaloID)
+buffaloData&lt;-buffaloID$data
+
+head(buffaloData)
+```
+
+---
+
+# Unduh data dari pangkalan
+
+Menggunakan `rgbif::occ_search()` kita hanya akan mendapat maksimal 500 data perjumpaan.
+
+--
+
+Seluruh data hanya dapat diperoleh langsung dari situs GBIF&lt;sup&gt;1&lt;/sup&gt; atau `rgbif::occ_download()`&lt;sup&gt;2&lt;/sup&gt;.
+
+--
+
+Lebih banyak tentang menggunakan package `rgbif` dapat dilihat di [sini](https://ropensci.github.io/rgbif/index.html).
+
+--
+
+.footnote[
+
+[1] Sudah harus mendaftar di gbif.org, menyediakan username dan password, lalu *log in* sebelum unduh.
+
+[2] Jika ingin menggunakan fungsi ini, kita harus lebih dulu mengatur `Sys.setenv(GBIF_USER="username", GBIF_PWD="password", GBIF_EMAIL="e-mail")` namun saat ini fungsi tersebut sedang bermasalah per 16/05/2019. 
+
+]
+
+---
+class: center, middle, inverse
+
+# Tentang eksplorasi data
+
+---
+
+# Apa itu eksplorasi data?
+
+&lt;br&gt;&lt;br&gt;
+Eksplorasi data adalah siklus iteratif:
+
+1. Membuat pertanyaan terkait data
+
+--
+
+2. Menjawab pertanyaan dengan memvisualisasikan data
+
+--
+
+3. Gunakan hasil eksplorasi untuk mempertajam pertanyaan/membuat pertanyaan baru
+
+---
+
+# Beberapa pertanyaan untuk memulai
+
+&lt;br&gt;&lt;br&gt;
+1. Variasi macam apa yang ada dalam variabel-variabel data saya?
+
+&gt; Variasi adalah kecenderungan perubahan nilai dalam suatu variabel
+
+
+2. Kovariasi macam apa yang ada di antara variabel-variabel dalam data saya?
+
+&gt; Kovariasi adalah kecenderungan perubahan nilai dari dua atau lebih variabel
+
+---
+
+# Tentang visualisasi data
+
+Ada banyak package di R untuk memvisualisasikan data sebagai tambahan dari bawaan package "menggambar" di R yaitu `graphics`, contoh: `lattice`, `ggplot2`, dll.
+
+Berikut adalah perbandingan pembuatan plot menggunakan `graphics` dan `ggplot2`.
+
+.pull-left[
+
+```r
+plot(cars$dist, cars$speed)
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+library(ggplot2)
+ggplot(cars) +
+  geom_jitter(aes(x=dist,y=speed))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+--
+
+Untuk materi kopdar ini, kita akan menggunakan ggplot2
+
+---
+
+# Yang istimewa dari ggplot: *grammar*
+
+&lt;br&gt;&lt;br&gt;
+Sintaks atau struktur kode dalam `ggplot2` sedemikian rupa sehingga sangat mudah untuk membuat grafik yang kompleks.
+
+
+No.| Elemen     | Fungsi   | Keterangan
+-------------|----------|----------------------------------------------
+1. | Data       |          | data mentah yang ingin kita visualisasikan
+2. | Geometries | `geom_`  | bentuk geometri untuk merepresentasikan data
+3. | Aesthetics | `aes()`  | keterangan tentang geometri atau objek statistik semisal gambar, ukuran, warna, dan posisi
+4. | Scales     | `scale_` | memetakan data ke dimensi-dimensi *aesthetics*, semisal kisaran data untuk memplot lebar elemen grafik atau faktor yang diberi warna
+
+---
+
+# Yang istimewa dari ggplot: *grammar*
+
+Mari kita simak contoh yang tadi, dengan tambahan grafik:
+
+
+```r
+ggplot(cars) +
+  geom_jitter(aes(x=dist,y=speed)) +
+  geom_histogram(aes(x=dist))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+# Data yang akan kita gunakan
+
+Dalam eksplorasi data kali ini, kita akan menggunakan data yang sudah saya siapkan: 
+
+1. Data kualitatif berupa data perjumpaan kelelawar Sulawesi dari [GBIF](https://www.gbif.org).
+
+
+```r
+lawar&lt;-read.csv("input/bat.csv")
+```
+
+2. Data kuantitatif berupa jumlah dan kelimpahan kelelawar tropis dari [BioTIME](http://biotime.st-andrews.ac.uk)
+
+
+```r
+mamtrop&lt;-read.csv("input/biotime_rawdata.csv")
+mamtrop_met&lt;-read.csv("input/biotime_metadata.csv")
+```
+
+---
+
+# Mengapa kelelawar?
+
+&lt;br&gt;&lt;br&gt;
+Kelelawar memiliki banyak manfaat dalam ekosistem:
+
+.pull-left[
+
+Membantu penyerbukan beberapa tumbuhan komoditas
+
+Kotorannya menjadi sumber nitrogen tumbuhan
+
+Pemakan serangga dan menjadi pembasmi hama alami dalam industri perkebunan
+
+]
+
+.pull-right[
+
+![*Eonycteris spelaea* menyerbuki bunga durian](https://www.merlintuttle.org/wp-content/uploads/2015/04/MDT_TH4_C3_6885-300x211.jpg)
+
+]
+
+???
+
+Image Source: (Merlin Tuttle)[https://www.merlintuttle.org/2015/05/03/loss-of-nectar-bats-threatens-durian-farmers/]
+
+---
+class: inverse, middle, center
+
+# Eksplorasi data perjumpaan GBIF
+### Berapa jumlah spesies per tahun?
+
+---
+
+# Cek bentuk data
+
+Langkah pertama dalam eksplorasi data adalah memahami struktur data: ada kolom apa saja? apa kelas datanya?
+
+Hal ini dapat dilakukan dengan mudah melalui package `dplyr`.
+
+
+```r
+library(dplyr)
+glimpse(lawar)
+```
+
+```
+## Observations: 2,677
+## Variables: 106
+## $ X.1                              &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10...
+## $ X                                &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10...
+## $ type                             &lt;fct&gt; PhysicalObject, PhysicalObjec...
+## $ modified                         &lt;fct&gt; 2015-01-06, 2015-01-06, 2015-...
+## $ license                          &lt;fct&gt; CCBY, CCBY, CCBY, CCBY, CCBY,...
+## $ accessrights                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ bibliographiccitation            &lt;fct&gt; Western Australian Museum. We...
+## $ references                       &lt;fct&gt; http://portal.vertnet.org/o/w...
+## $ institutionid                    &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ collectionid                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ datasetid                        &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ institutioncode                  &lt;fct&gt; WAM, WAM, WAM, WAM, WAM, WAM,...
+## $ collectioncode                   &lt;fct&gt; MAMM, MAMM, MAMM, MAMM, MAMM,...
+## $ datasetname                      &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ basisofrecord                    &lt;fct&gt; PreservedSpecimen, PreservedS...
+## $ dynamicproperties                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ occurrenceid                     &lt;fct&gt; 0a488928-bde1-441c-abef-4a323...
+## $ catalognumber                    &lt;fct&gt; M33093, M33132, M33271, M3315...
+## $ recordnumber                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ recordedby                       &lt;fct&gt; "SUYANTO,A.", "SUYANTO,A.", "...
+## $ individualcount                  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+## $ sex                              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ lifestage                        &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ occurrencestatus                 &lt;fct&gt; present, present, present, pr...
+## $ preparations                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ associatedsequences              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ othercatalognumbers              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ occurrenceremarks                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ organismid                       &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ previousidentifications          &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ eventid                          &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ eventdate                        &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ startdayofyear                   &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ enddayofyear                     &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ year                             &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ month                            &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ day                              &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ verbatimeventdate                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ habitat                          &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ highergeography                  &lt;fct&gt; | Indonesia | SOUTH SULAWESI ...
+## $ continent                        &lt;fct&gt; Asia, Asia, Asia, Asia, Asia,...
+## $ islandgroup                      &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ island                           &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ country                          &lt;fct&gt; Indonesia, Indonesia, Indones...
+## $ countrycode                      &lt;fct&gt; ID, ID, ID, ID, ID, ID, ID, I...
+## $ stateprovince                    &lt;fct&gt; SOUTH SULAWESI, SOUTH SULAWES...
+## $ county                           &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ locality                         &lt;fct&gt; pangkajene district; padang l...
+## $ verbatimlocality                 &lt;fct&gt; indonesia | south sulawesi | ...
+## $ minimumelevationinmeters         &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ maximumelevationinmeters         &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ verbatimelevation                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ locationaccordingto              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ locationremarks                  &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ decimallatitude                  &lt;dbl&gt; -4.724904, -4.724904, -5.5333...
+## $ decimallongitude                 &lt;dbl&gt; 119.6093, 119.6093, 119.9833,...
+## $ geodeticdatum                    &lt;fct&gt; not recorded (forced WGS84), ...
+## $ coordinateuncertaintyinmeters    &lt;int&gt; 10000, 10000, 10000, 10000, 1...
+## $ verbatimcoordinates              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ verbatimlatitude                 &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ verbatimlongitude                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ verbatimcoordinatesystem         &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ georeferencedby                  &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ georeferenceddate                &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ georeferenceprotocol             &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ georeferencesources              &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ georeferenceverificationstatus   &lt;fct&gt; requires verification, requir...
+## $ identificationqualifier          &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ typestatus                       &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ identifiedby                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ dateidentified                   &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ identificationverificationstatus &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ identificationremarks            &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ scientificname                   &lt;fct&gt; Eonycteris spelaea, Rousettus...
+## $ higherclassification             &lt;fct&gt; |  |  | Chiroptera | Pteropod...
+## $ kingdom                          &lt;fct&gt; Animalia, Animalia, Animalia,...
+## $ phylum                           &lt;fct&gt; Chordata, Chordata, Chordata,...
+## $ class                            &lt;fct&gt; Mammalia, Mammalia, Mammalia,...
+## $ order                            &lt;fct&gt; Chiroptera, Chiroptera, Chiro...
+## $ family                           &lt;fct&gt; Pteropodidae, Pteropodidae, P...
+## $ genus                            &lt;fct&gt; Eonycteris, Rousettus, Cynopt...
+## $ subgenus                         &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ specificepithet                  &lt;fct&gt; spelaea, celebensis, brachyot...
+## $ infraspecificepithet             &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ taxonrank                        &lt;fct&gt; species, species, species, sp...
+## $ scientificnameauthorship         &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ nomenclaturalcode                &lt;fct&gt; ICZN, ICZN, ICZN, ICZN, ICZN,...
+## $ lengthinmm                       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ lengthtype                       &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ lengthunitsinferred              &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ massing                          &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ underivedlifestage               &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ underivedsex                     &lt;fct&gt; , , , , , , , , , , , , , , ,...
+## $ dataset_citation                 &lt;fct&gt; Western Australian Museum. We...
+## $ gbifdatasetid                    &lt;fct&gt; 7c93d290-6c8b-11de-8226-b8a03...
+## $ gbifpublisherid                  &lt;fct&gt; b36f3505-f2d9-499f-a669-fa418...
+## $ dataset_contact_email            &lt;fct&gt; OZCAM.CHAFC@gmail.com, OZCAM....
+## $ dataset_contact                  &lt;fct&gt; OZCAM Webmaster, OZCAM Webmas...
+## $ dataset_pubdate                  &lt;fct&gt; 2015-01-06, 2015-01-06, 2015-...
+## $ lastindexed                      &lt;fct&gt; 2016-07-25, 2016-07-25, 2016-...
+## $ migrator_version                 &lt;fct&gt; 2015-01-05, 2015-01-05, 2015-...
+## $ hastissue                        &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ vntype                           &lt;fct&gt; specimen, specimen, specimen,...
+## $ haslength                        &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ correctedlocality                &lt;fct&gt; pangkajene district; padang l...
+## $ speciesname                      &lt;fct&gt; Eonycteris spelaea, Rousettus...
+```
+
+---
+
+# Berkutat dengan dplyr
+
+Package `dplyr` adalah kelompok package `tidyverse` yang menggunakan operator pipa ` %&gt;% ` untuk meneruskan fungsi.
+
+Bandingkan kedua kode ini dan luarannya.
+
+.pull-left[
+
+```r
+lawar %&gt;% 
+  select(speciesname) %&gt;% 
+  head()
+```
+
+```
+##                 speciesname
+## 1        Eonycteris spelaea
+## 2      Rousettus celebensis
+## 3     Cynopterus brachyotis
+## 4     Cynopterus brachyotis
+## 5     Cynopterus brachyotis
+## 6 Rousettus amplexicaudatus
+```
+]
+
+.pull-right[
+
+```r
+head(select(lawar, speciesname))
+```
+
+```
+##                 speciesname
+## 1        Eonycteris spelaea
+## 2      Rousettus celebensis
+## 3     Cynopterus brachyotis
+## 4     Cynopterus brachyotis
+## 5     Cynopterus brachyotis
+## 6 Rousettus amplexicaudatus
+```
+]
+
+---
+
+# Eksplorasi data: distribusi perjumpaan berdasarkan tahun
+
+Mari kita coba membuat plot untuk memvisualisasikan jumlah perjumpaan kelelawar berdasarkan tahun.
+
+--
+
+
+```r
+library(ggplot2)
+ggplot(lawar) +
+  geom_bar(aes(x=year),na.rm = T) +
+  labs(x="tahun",y="jumlah perjumpaan")
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/yearExploration-1.png)&lt;!-- --&gt;
+
+--
+
+Tampak bahwa ada beberapa nilai yang sangat kecil pada tahun sebelum 1970an.
+
+---
+
+# Eksplorasi data: distribusi perjumpaan berdasarkan tahun
+
+Kita bisa melihat apakah ada data di area tersebut dengan mendefinisikan sumbu y dari 0 hingga 20.
+
+
+```r
+ggplot(data=lawar) +
+  geom_bar(aes(x=year), na.rm = T)+
+  coord_cartesian(ylim=c(0,50)) + #&lt;&lt; kode untuk mengatur sumbu y
+  labs(x="tahun",y="jumlah perjumpaan")
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+Apa observasi penting dari data ini?
+
+---
+
+# Eksplorasi data: distribusi perjumpaan berdasarkan tahun
+
+Tampak bahwa data perjumpaan memang bias pada tahun 1970an. Spesimen tidak merata ada di setiap tahun.
+
+Tahun bisa diubah menjadi faktor yang bersifat kategori alih-alih angka kuantitatif.
+
+
+```r
+ggplot(data=lawar) +
+  geom_bar(aes(x=as.factor(year), #&lt;&lt; kode untuk memfaktorkan tahun
+               fill=family), na.rm = T) + ## pakai family karena spesies terlalu banyak
+  labs(x="tahun",y="jumlah perjumpaan") +
+  theme(axis.text.x = element_text(angle=45))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/cars-1.png)&lt;!-- --&gt;
+
+---
+
+# Eksplorasi data: distribusi perjumpaan berdasarkan tahun
+
+Penampilan data tahun yang demikian akan menimbulkan persepsi distribusi kekayaan spesies yang berubah seiring waktu padahal ada bias pencuplikan.
+
+Kita ambil saja interval tahun yang kontinu, yakni dari tahun 1972 sampai dengan 1976.
+
+
+```r
+lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% 
+  ggplot() +  
+  geom_bar(aes(x=year), na.rm=T) +
+  labs(x="tahun",y="jumlah perjumpaan")
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+# Eksplorasi data: distribusi perjumpaan berdasarkan tahun
+
+Lalu kita bisa menampilkan jumlah spesies per tahun
+
+
+```r
+lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% 
+  group_by(year) %&gt;% 
+  count(speciesname) %&gt;% 
+  ggplot() +  
+  geom_bar(aes(x=year), na.rm=T)
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+--
+
+Apakah sudah tepat menyimpulkan tren perubahan jumlah spesies dari data ini?
+
+---
+class: inverse, center, middle
+
+# Eksplorasi data kelimpahan dari BioTIME
+### Bagaimana tren kelimpahan spesies di ekosistem tropis?
+
+---
+
+# Apa yang harus kita lakukan?
+
+&lt;br&gt;&lt;br&gt;
+--
+
+Cek data apakah sudah terbaca dengan benar
+
+--
+
+Cek tipe variabel yang ada dalam data
+
+--
+
+Visualisasikan data yang ingin kita eksplor
+
+
+---
+
+# Mari kita lihat ada variabel apa saja
+
+&lt;br&gt;&lt;br&gt;
+Apa saja fungsi yang dapat kita gunakan?
+
+--
+
+
+```r
+glimpse(mamtrop)
+```
+
+```
+## Observations: 3,142
+## Variables: 10
+## $ STUDY_ID      &lt;int&gt; 348, 348, 348, 348, 348, 348, 348, 348, 348, 348...
+## $ ABUNDANCE     &lt;dbl&gt; 1, 1, 1, 4, 9, 7, 2, 3, 2, 4, 3, 2, 2, 4, 4, 1, ...
+## $ BIOMASS       &lt;dbl&gt; 55, 62, 62, 250, 538, 426, 126, 187, 128, 217, 1...
+## $ YEAR          &lt;int&gt; 2006, 2007, 2007, 2008, 2008, 2008, 2010, 2011, ...
+## $ LATITUDE      &lt;dbl&gt; -28.5853, -28.5853, -28.5853, -28.5853, -28.5853...
+## $ LONGITUDE     &lt;dbl&gt; -48.9731, -48.9731, -48.9731, -48.9731, -48.9731...
+## $ PLOT          &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ DEPTH         &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, ...
+## $ SAMPLE_DESC   &lt;fct&gt; 2006_1, 2007_1, 2007_1, 2008_1, 2008_1, 2008_1, ...
+## $ GENUS_SPECIES &lt;fct&gt; Artibeus fimbriatus, Artibeus fimbriatus, Artibe...
+```
+
+---
+
+# Mari kita lihat ada variabel apa saja
+
+
+```r
+glimpse(mamtrop_met)
+```
+
+```
+## Observations: 10
+## Variables: 49
+## $ STUDY_ID          &lt;int&gt; 348, 516, 516, 516, 516, 516, 515, 515, 515,...
+## $ REALM             &lt;fct&gt; Terrestrial, Terrestrial, Terrestrial, Terre...
+## $ CLIMATE           &lt;fct&gt; Temperate/Tropical, Tropical, Tropical, Trop...
+## $ BIOME_MAP         &lt;fct&gt; Tropical and subtropical moist broadleaf for...
+## $ ID_DATASETS       &lt;int&gt; 229, 393, 393, 393, 393, 393, 392, 392, 392,...
+## $ TAXA              &lt;fct&gt; Mammals, Mammals, Mammals, Mammals, Mammals,...
+## $ ORGANISMS         &lt;fct&gt; Bat, bats, bats, bats, bats, bats, bats, bat...
+## $ TITLE             &lt;fct&gt; Bats (Mammalia Chiroptera) in restinga in th...
+## $ AB_BIO            &lt;fct&gt; AB, A, A, A, A, A, A, A, A, A
+## $ HAS_PLOT          &lt;fct&gt; Y, Y, Y, Y, Y, Y, Y, Y, Y, Y
+## $ DATA_POINTS       &lt;int&gt; 10, 5, 5, 5, 5, 5, 3, 3, 3, 3
+## $ START_YEAR        &lt;int&gt; 2006, 1997, 1997, 1997, 1997, 1997, 2003, 20...
+## $ END_YEAR          &lt;int&gt; 2016, 2013, 2013, 2013, 2013, 2013, 2005, 20...
+## $ CENT_LAT          &lt;dbl&gt; -28.608900, -2.386381, -2.386381, -2.386381,...
+## $ CENT_LONG         &lt;dbl&gt; -48.98125, -59.91877, -59.91877, -59.91877, ...
+## $ NUMBER_OF_SPECIES &lt;int&gt; 13, 45, 45, 45, 45, 45, 43, 43, 43, 43
+## $ NUMBER_OF_SAMPLES &lt;int&gt; 16, 225, 225, 225, 225, 225, 452, 452, 452, 452
+## $ NUMBER_LAT_LONG   &lt;int&gt; 2, 12, 12, 12, 12, 12, 17, 17, 17, 17
+## $ TOTAL             &lt;int&gt; 177, 1380, 1380, 1380, 1380, 1380, 1585, 158...
+## $ GRAIN_SIZE_TEXT   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ GRAIN_SQ_KM       &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+## $ AREA_SQ_KM        &lt;dbl&gt; 0.0126637, 96.6343980, 96.6343980, 96.634398...
+## $ AB_TYPE           &lt;int&gt; 1, 1, 1, 1, 1, 1, 6, 6, 6, 6
+## $ BIO_TYPE          &lt;int&gt; 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ SAMPLE_TYPE       &lt;int&gt; 101, 177, 177, 177, 177, 177, 176, 176, 176,...
+## $ ID_CONTACTS       &lt;int&gt; 229, 394, 394, 394, 394, 394, 393, 393, 393,...
+## $ CONTACT_1         &lt;fct&gt; Fernando Carvalho, Ricardo Rocha, Ricardo Ro...
+## $ CONTACT_2         &lt;fct&gt; Fernando Carvalho, Adria Lopez-Baucells, Adr...
+## $ CONT_1_MAIL       &lt;fct&gt; fernando_bats@yahoo.com.br, ricardo.nature@g...
+## $ CONT_2_MAIL       &lt;fct&gt; f.carvalho@unesc.net, adria.baucells@gmail.c...
+## $ LICENSE           &lt;fct&gt; ODbL, CC-by, CC-by, CC-by, CC-by, CC-by, CC-...
+## $ WEB_LINK          &lt;fct&gt; None, None, None, None, None, None, None, No...
+## $ DATA_SOURCE       &lt;fct&gt; Contacted author directly, Contributed direc...
+## $ ID_METHODS        &lt;int&gt; 229, 394, 394, 394, 394, 394, 393, 393, 393,...
+## $ METHODS           &lt;fct&gt; "Bat individuals were collected from 2006 to...
+## $ SUMMARY_METHODS   &lt;fct&gt; nets, Mist-nets, Mist-nets, Mist-nets, Mist-...
+## $ ID_CURATION       &lt;int&gt; 229, 393, 393, 393, 393, 393, 392, 392, 392,...
+## $ LINK_ID           &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ COMMENTS          &lt;fct&gt; 1. Name of plots: 1: Jabuticabeira 2: Morro ...
+## $ DATE_STUDY_ADDED  &lt;fct&gt; Aug-16, Aug-17, Aug-17, Aug-17, Aug-17, Aug-...
+## $ ID_ABUNDANCE      &lt;int&gt; 1, 1, 1, 1, 1, 1, 6, 6, 6, 6
+## $ ABUNDANCE_TYPE    &lt;fct&gt; Count, Count, Count, Count, Count, Count, Me...
+## $ ID_BIOMASS        &lt;int&gt; 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ BIOMASS_TYPE      &lt;fct&gt; Weight, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ ID_SAMPLE         &lt;int&gt; 101, 177, 177, 177, 177, 177, 176, 176, 176,...
+## $ ID_TREAT          &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ SAMPLE_DESC_NAME  &lt;fct&gt; year_plot, lat_long_habitat_fragmentSize_sea...
+## $ ID_CITATION1      &lt;int&gt; 314, 596, 597, 598, 599, 600, 592, 593, 594,...
+## $ CITATION_LINE     &lt;fct&gt; "Carvalho, F., Zocche, J.J. &amp; MendonÃ§a, R.Ã...
+```
+
+---
+
+# Melihat variasi data
+
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(mamtrop) +
+  geom_histogram(aes(ABUNDANCE), binwidth = 10)
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Melihat kovariasi data
+
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(mamtrop) +
+  geom_jitter(aes(x=ABUNDANCE,y=BIOMASS))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+---
+
+# Bagaimana cara melihat tren kelimpahan?
+
+&lt;br&gt;&lt;br&gt;
+--
+
+sumbu x adalah waktu
+
+--
+
+sumbu y adalah kelimpahan
+
+--
+
+
+```r
+ggplot(mamtrop) +
+  geom_jitter(aes(x=YEAR,y=ABUNDANCE))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+---
+class: center, middle
+
+# Apalagi yang dapat dieksplor?
+
+### Salurkan kode Anda dalam kopdar!
+
+---
+class: inverse, center, middle
+
+# Terima kasih!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
