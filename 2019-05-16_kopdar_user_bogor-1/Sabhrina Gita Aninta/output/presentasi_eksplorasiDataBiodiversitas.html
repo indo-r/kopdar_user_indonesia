@@ -11,23 +11,46 @@
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
 
+
+class: title-slide-custom
+
+&lt;div class="my-logo-right"&gt;&lt;/div&gt; 
+
+&lt;style type="text/css"&gt;
+.my-logo-right {
+content: "";
+    position: absolute;
+    top: 15px;
+    right:   8px;
+    height: 40px;
+    width: 120px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png);
+}
+
+.title-slide-custom .remark-slide-number {
+  display: none;
+}
+&lt;/style&gt;
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
 # R untuk Eksplorasi Data Biodiversitas
-### Sabhrina Gita Aninta
+
+&lt;br&gt;&lt;br&gt; 
+## Sabhrina Gita Aninta
 ### Tambora Muda Indonesia / Komunitas R Indonesia
 ### 2019/05/16 (updated: 2019-05-17)
 
 ---
-
-
 # Teknis tutorial
 
 Silakan memulai dari membuka project baru dari Rstudio:
 
 &gt; File - New Project... - New Directory - New Project
 
-![](newproject.PNG){ width=50% }
+&lt;img src="images/newproject.PNG" width="50%" /&gt;
 
 Pilih lokasi proyek dan tulis nama folder yang jadi lokasi proyek sesuka Anda, lalu klik `Create Project`.
 
@@ -38,37 +61,22 @@ Pilih lokasi proyek dan tulis nama folder yang jadi lokasi proyek sesuka Anda, l
 Sesi baru untuk tempat Anda melakukan proyek akan terbuka, lalu Anda dapat membuka skrip R baru untuk menulis kode R Anda
 
 .pull-left[
-![](rscript_menu.PNG)
+![](images/rscript_menu.PNG)
 ]
 
 .pull-right[
-![](rscript_menu2.PNG)
+![](images/newscript.PNG)
 ]
 
-Jangan lupa menyimpan skrip Anda.
+Jangan lupa menyimpan skrip Anda sebelum memulai menuliskan kode.
 
-Lalu ikuti tutorial dengan mengetikkan kode yang dipresentasikan dalam skrip Anda.
-
----
-
-# Apa itu Data Biodiversitas?
-
-Kata "biodiversitas" dalam bahasa Indonesia baku umum dikenal dalam frase "keanekaragaman hayati" atau disingkat "kehati".
-
-Meski tidak baku, kata "biodiversitas" lebih populer di kalangan praktisi dibandingkan "kehati" yang lebih umum digunakan di lingkungan pemerintah.
-
-Data biodiversitas ada berbagai macam:
-
-- perjumpaan (*occurrence*)
-
-- sekuen DNA/RNA/protein
-
-- karakter morfologi dan fisiologi
+Ikuti tutorial dengan mengetikkan kode yang dipresentasikan dalam skrip Anda.
 
 ---
+
 class: center, middle, bottom
 
-![](biodiversity.jpg)
+![](images/biodiversity.jpg)
 
 # Memperoleh Data Biodiversitas
 
@@ -78,20 +86,58 @@ Image source: [Clipart Library](http://clipart-library.com/clipart/241546.htm)
 
 ---
 
+# Apa itu Data Biodiversitas?
+
+&lt;br&gt;&lt;br&gt;
+Kata "biodiversitas" dalam bahasa Indonesia baku umum dikenal dalam frase "keanekaragaman hayati" atau disingkat "kehati".
+
+--
+
+Meski tidak baku, kata "biodiversitas" lebih populer di kalangan praktisi dibandingkan "kehati" yang lebih umum digunakan di lingkungan pemerintah.
+
+--
+
+Data biodiversitas ada berbagai macam:
+
+--
+
+- perjumpaan (*occurrence*)
+
+--
+
+- sekuen DNA/RNA/protein
+
+--
+
+- karakter morfologi dan fisiologi
+
+---
+
 # Mengapa data biodiversitas?
 
+&lt;br&gt;&lt;br&gt;
+
+.pull-left[
 Seluruh hidup kita bergantung kepada biodiversitas:
 
 - air bersih
 
+
 - udara bersih
+
 
 - makanan
 
 - tempat tinggal
 
 - kesehatan
+]
 
+.pull-right[
+![](http://www.fao.org/fileadmin/user_upload/faowater/images/newpubs/IES1b.jpg)
+]
+
+--
 
 Manajemen biodiversitas yang baik memerlukan manajemen data biodiversitas yang baik.
 
@@ -99,13 +145,22 @@ Manajemen biodiversitas yang baik memerlukan manajemen data biodiversitas yang b
 
 # Pangkalan data (*database*) kehati
 
+&lt;br&gt;&lt;br&gt;
 Era informasi memungkinkan (dan menuntut) kita memanajemen informasi dengan sistematis dan integratif agar data dapat diakses dan digunakan kembali oleh banyak orang.
 
-Berbagai pangkalan data kehati tersebar di dalam jaringan, ini beberapa yang saya tahu:
+--
+
+Berbagai pangkalan data kehati tersebar di dalam jaringan:
+
+--
 
 - Global Biodiversity Information Facility ( [GBIF](https://www.gbif.org) )
 
+--
+
 - Global database of biodiversity time series ( [BioTIME](http://biotime.st-andrews.ac.uk) )
+
+--
 
 - An Anthropocene map of genetic diversity ( [iMapGenes](https://macroecology.ku.dk/resources/imapgenes) )
 
@@ -113,9 +168,15 @@ Berbagai pangkalan data kehati tersebar di dalam jaringan, ini beberapa yang say
 
 Yang lokal:
 
+--
+
 - [Indonesian Biodiversity Information Facility](http://inabif.lipi.go.id)
 
+--
+
 - [Biodiverskripsi](https://biodiverskripsi.org)
+
+--
 
 - [Atlas Burung Indonesia](http://atlasburung.web.id)
 
@@ -123,19 +184,34 @@ Yang lokal:
 
 # Komponen data kehati
 
-Bagi yang belum familiar dengan data kehati, mari kita kenalan dulu dengan komponen data kehati:
+&lt;br&gt;&lt;br&gt;
+Data kehati memiliki berbagai macam atribut:
+
+--
 
 - ID unik
 
+--
+
 - nama spesies (*binomial nomenclature*, contoh: *Oryza sativa*, *Gecko gecko*, dll.)
+
+--
 
 - lokasi perjumpaan (koordinat, nama daerah, dll.)
 
+--
+
 - waktu perjumpaan (tanggal, jam, tahun, dll.)
+
+--
 
 - kuantitas organisme (jumlah individu, biomassa, OTU, dll.)
 
+--
+
 - data abiotik pendukung (suhu, kondisi tanah, cahaya)
+
+--
 
 - data organisme lain yang berkaitan (biomassa vegetasi, kelimpahan parasit, dll.)
 
@@ -144,9 +220,13 @@ Bagi yang belum familiar dengan data kehati, mari kita kenalan dulu dengan kompo
 
 # Unduh data dari pangkalan
 
-Beberapa pangkalan menyediakan data yang langsung dapat diunduh dari dalam jaringan setelah melakukan *log in* terlebih dulu.
+Beberapa pangkalan menyediakan data yang langsung dapat diunduh dari dalam jaringan setelah pengguna melakukan *log in*.
+
+--
 
 GBIF memiliki API yang dapat digunakan via R.
+
+--
 
 
 ```r
@@ -165,11 +245,11 @@ head(buffaloData)
 
 # Unduh data dari pangkalan
 
-Menggunakan `rgbif::occ_search()` kita hanya akan mendapat maksimal 500 data perjumpaan, bukan seluruh data yang ada.
+Menggunakan `rgbif::occ_search()` kita hanya akan mendapat maksimal 500 data perjumpaan.
 
 --
 
-Jika ingin memperoleh seluruh data, kita harus mengunduh langsung dari situs GBIF&lt;sup&gt;1&lt;/sup&gt; atau dapat menggunakan menggunakan `rgbif::occ_download()`&lt;sup&gt;2&lt;/sup&gt;.
+Seluruh data hanya dapat diperoleh langsung dari situs GBIF&lt;sup&gt;1&lt;/sup&gt; atau `rgbif::occ_download()`&lt;sup&gt;2&lt;/sup&gt;.
 
 --
 
@@ -179,9 +259,9 @@ Lebih banyak tentang menggunakan package `rgbif` dapat dilihat di [sini](https:/
 
 .footnote[
 
-[1] Untuk mengunduh data dari GBIF, kita sudah harus mendaftar di gbif.org, menyediakan username dan password, lalu *log in* sebelum unduh.
+[1] Sudah harus mendaftar di gbif.org, menyediakan username dan password, lalu *log in* sebelum unduh.
 
-[2] Fungsi `rgbif::occ_download()` sedang mengalami isu yang dilaporkan per 16/05/2019. Jika ingin menggunakan fungsi ini, kita harus lebih dulu mengatur `Sys.setenv(GBIF_USER="username", GBIF_PWD="password", GBIF_EMAIL="e-mail")`
+[2] Jika ingin menggunakan fungsi ini, kita harus lebih dulu mengatur `Sys.setenv(GBIF_USER="username", GBIF_PWD="password", GBIF_EMAIL="e-mail")` namun saat ini fungsi tersebut sedang bermasalah per 16/05/2019. 
 
 ]
 
@@ -194,6 +274,7 @@ class: center, middle, inverse
 
 # Apa itu eksplorasi data?
 
+&lt;br&gt;&lt;br&gt;
 Eksplorasi data adalah siklus iteratif:
 
 1. Membuat pertanyaan terkait data
@@ -210,11 +291,11 @@ Eksplorasi data adalah siklus iteratif:
 
 # Beberapa pertanyaan untuk memulai
 
+&lt;br&gt;&lt;br&gt;
 1. Variasi macam apa yang ada dalam variabel-variabel data saya?
 
 &gt; Variasi adalah kecenderungan perubahan nilai dalam suatu variabel
 
---
 
 2. Kovariasi macam apa yang ada di antara variabel-variabel dalam data saya?
 
@@ -222,28 +303,93 @@ Eksplorasi data adalah siklus iteratif:
 
 ---
 
+# Tentang visualisasi data
+
+Ada banyak package di R untuk memvisualisasikan data sebagai tambahan dari bawaan package "menggambar" di R yaitu `graphics`, contoh: `lattice`, `ggplot2`, dll.
+
+Berikut adalah perbandingan pembuatan plot menggunakan `graphics` dan `ggplot2`.
+
+.pull-left[
+
+```r
+plot(cars$dist, cars$speed)
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+library(ggplot2)
+ggplot(cars) +
+  geom_jitter(aes(x=dist,y=speed))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+--
+
+Untuk materi kopdar ini, kita akan menggunakan ggplot2
+
+---
+
+# Yang istimewa dari ggplot: *grammar*
+
+&lt;br&gt;&lt;br&gt;
+Sintaks atau struktur kode dalam `ggplot2` sedemikian rupa sehingga sangat mudah untuk membuat grafik yang kompleks.
+
+
+No.| Elemen     | Fungsi   | Keterangan
+-------------|----------|----------------------------------------------
+1. | Data       |          | data mentah yang ingin kita visualisasikan
+2. | Geometries | `geom_`  | bentuk geometri untuk merepresentasikan data
+3. | Aesthetics | `aes()`  | keterangan tentang geometri atau objek statistik semisal gambar, ukuran, warna, dan posisi
+4. | Scales     | `scale_` | memetakan data ke dimensi-dimensi *aesthetics*, semisal kisaran data untuk memplot lebar elemen grafik atau faktor yang diberi warna
+
+---
+
+# Yang istimewa dari ggplot: *grammar*
+
+Mari kita simak contoh yang tadi, dengan tambahan grafik:
+
+
+```r
+ggplot(cars) +
+  geom_jitter(aes(x=dist,y=speed)) +
+  geom_histogram(aes(x=dist))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
 # Data yang akan kita gunakan
 
-Dalam eksplorasi data kali ini, kita akan menggunakan data yang sudah saya siapkan, yakni data kelelawar Sulawesi yang saya unduh dan bersihkan dari [GBIF](https://www.gbif.org).
+Dalam eksplorasi data kali ini, kita akan menggunakan data yang sudah saya siapkan: 
+
+1. Data kualitatif berupa data perjumpaan kelelawar Sulawesi dari [GBIF](https://www.gbif.org).
 
 
 ```r
 lawar&lt;-read.csv("input/bat.csv")
 ```
 
-Kita juga akan mengeksplorasi data kuantitatif yaitu jumlah dan kelimpahan kelelawar tropis yang saya unduh dari [BioTIME](http://biotime.st-andrews.ac.uk)
+2. Data kuantitatif berupa jumlah dan kelimpahan kelelawar tropis dari [BioTIME](http://biotime.st-andrews.ac.uk)
 
 
 ```r
 mamtrop&lt;-read.csv("input/biotime_rawdata.csv")
+mamtrop_met&lt;-read.csv("input/biotime_metadata.csv")
 ```
 
 ---
 
 # Mengapa kelelawar?
 
+&lt;br&gt;&lt;br&gt;
 Kelelawar memiliki banyak manfaat dalam ekosistem:
-
 
 .pull-left[
 
@@ -259,10 +405,6 @@ Pemakan serangga dan menjadi pembasmi hama alami dalam industri perkebunan
 
 ![*Eonycteris spelaea* menyerbuki bunga durian](https://www.merlintuttle.org/wp-content/uploads/2015/04/MDT_TH4_C3_6885-300x211.jpg)
 
-
-![*Kerivoula hardwickii* bersarang dalam *Nepenthes hemsleyana*](http://www.merlintuttle.com/wp-content/uploads/2014/09/MDT_BR_C3_1356-Edit-259x300.jpg)
-
-![*Megaderma spasma*](https://www.merlintuttle.org/wp-content/uploads/2018/06/MDT_120830_TH3_8941-Edit-Edit-291x380.jpg)
 ]
 
 ???
@@ -279,7 +421,9 @@ class: inverse, middle, center
 
 # Cek bentuk data
 
-Langkah pertama dalam eksplorasi data adalah memahami struktur data, ada kolom apa saja? Apa kelas datanya? Hal ini dapat dilakukan dengan mudah melalui package `dplyr`.
+Langkah pertama dalam eksplorasi data adalah memahami struktur data: ada kolom apa saja? apa kelas datanya?
+
+Hal ini dapat dilakukan dengan mudah melalui package `dplyr`.
 
 
 ```r
@@ -400,9 +544,55 @@ glimpse(lawar)
 
 ---
 
+# Berkutat dengan dplyr
+
+Package `dplyr` adalah kelompok package `tidyverse` yang menggunakan operator pipa ` %&gt;% ` untuk meneruskan fungsi.
+
+Bandingkan kedua kode ini dan luarannya.
+
+.pull-left[
+
+```r
+lawar %&gt;% 
+  select(speciesname) %&gt;% 
+  head()
+```
+
+```
+##                 speciesname
+## 1        Eonycteris spelaea
+## 2      Rousettus celebensis
+## 3     Cynopterus brachyotis
+## 4     Cynopterus brachyotis
+## 5     Cynopterus brachyotis
+## 6 Rousettus amplexicaudatus
+```
+]
+
+.pull-right[
+
+```r
+head(select(lawar, speciesname))
+```
+
+```
+##                 speciesname
+## 1        Eonycteris spelaea
+## 2      Rousettus celebensis
+## 3     Cynopterus brachyotis
+## 4     Cynopterus brachyotis
+## 5     Cynopterus brachyotis
+## 6 Rousettus amplexicaudatus
+```
+]
+
+---
+
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
 
-Tampak bahwa ada beberapa nilai yang sangat kecil.
+Mari kita coba membuat plot untuk memvisualisasikan jumlah perjumpaan kelelawar berdasarkan tahun.
+
+--
 
 
 ```r
@@ -414,6 +604,10 @@ ggplot(lawar) +
 
 ![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/yearExploration-1.png)&lt;!-- --&gt;
 
+--
+
+Tampak bahwa ada beberapa nilai yang sangat kecil pada tahun sebelum 1970an.
+
 ---
 
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
@@ -424,28 +618,27 @@ Kita bisa melihat apakah ada data di area tersebut dengan mendefinisikan sumbu y
 ```r
 ggplot(data=lawar) +
   geom_bar(aes(x=year), na.rm = T)+
-  coord_cartesian(ylim=c(0,50)) +
+  coord_cartesian(ylim=c(0,50)) + #&lt;&lt; kode untuk mengatur sumbu y
   labs(x="tahun",y="jumlah perjumpaan")
 ```
 
-![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 Apa observasi penting dari data ini?
-
---
-
-Tampak bahwa data perjumpaan memang bias pada tahun 1970an. Spesimen tidak merata ada di setiap tahun.
 
 ---
 
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
 
-Grafik tampak kosong sehingga tidak ada gunanya menskala tahun. Tahun bisa diubah menjadi faktor yang bersifat kategori alih-alih angka kuantitatif.
+Tampak bahwa data perjumpaan memang bias pada tahun 1970an. Spesimen tidak merata ada di setiap tahun.
+
+Tahun bisa diubah menjadi faktor yang bersifat kategori alih-alih angka kuantitatif.
 
 
 ```r
 ggplot(data=lawar) +
-  geom_bar(aes(x=as.factor(year), fill=family), na.rm = T) + ## pakai family karena spesies terlalu banyak
+  geom_bar(aes(x=as.factor(year), #&lt;&lt; kode untuk memfaktorkan tahun
+               fill=family), na.rm = T) + ## pakai family karena spesies terlalu banyak
   labs(x="tahun",y="jumlah perjumpaan") +
   theme(axis.text.x = element_text(angle=45))
 ```
@@ -456,18 +649,19 @@ ggplot(data=lawar) +
 
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
 
-Tapi, data tahun tidak tepat ditampilkan demikian karena akan menimbulkan persepsi distribusi kekayaan spesies yang berubah seiring waktu padahal ada bias pencuplikan. 
+Penampilan data tahun yang demikian akan menimbulkan persepsi distribusi kekayaan spesies yang berubah seiring waktu padahal ada bias pencuplikan.
 
 Kita ambil saja interval tahun yang kontinu, yakni dari tahun 1972 sampai dengan 1976.
 
 
 ```r
 lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% 
-  ggplot() +  geom_bar(aes(x=year), na.rm=T) +
-   labs(x="tahun",y="jumlah perjumpaan")
+  ggplot() +  
+  geom_bar(aes(x=year), na.rm=T) +
+  labs(x="tahun",y="jumlah perjumpaan")
 ```
 
-![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -477,13 +671,21 @@ Lalu kita bisa menampilkan jumlah spesies per tahun
 
 
 ```r
-lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% group_by(year) %&gt;% count(speciesname) %&gt;% 
-  ggplot() +  geom_bar(aes(x=year), na.rm=T)
+lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% 
+  group_by(year) %&gt;% 
+  count(speciesname) %&gt;% 
+  ggplot() +  
+  geom_bar(aes(x=year), na.rm=T)
 ```
 
-![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+--
+
+Apakah sudah tepat menyimpulkan tren perubahan jumlah spesies dari data ini?
 
 ---
+class: inverse, center, middle
 
 # Eksplorasi data kelimpahan dari BioTIME
 ### Bagaimana tren kelimpahan spesies di ekosistem tropis?
@@ -492,6 +694,7 @@ lawar %&gt;% filter(1972&lt;=year &amp; year &lt;=1976) %&gt;% group_by(year) %&
 
 # Apa yang harus kita lakukan?
 
+&lt;br&gt;&lt;br&gt;
 --
 
 Cek data apakah sudah terbaca dengan benar
@@ -509,6 +712,7 @@ Visualisasikan data yang ingin kita eksplor
 
 # Mari kita lihat ada variabel apa saja
 
+&lt;br&gt;&lt;br&gt;
 Apa saja fungsi yang dapat kita gunakan?
 
 --
@@ -535,8 +739,99 @@ glimpse(mamtrop)
 
 ---
 
+# Mari kita lihat ada variabel apa saja
+
+
+```r
+glimpse(mamtrop_met)
+```
+
+```
+## Observations: 10
+## Variables: 49
+## $ STUDY_ID          &lt;int&gt; 348, 516, 516, 516, 516, 516, 515, 515, 515,...
+## $ REALM             &lt;fct&gt; Terrestrial, Terrestrial, Terrestrial, Terre...
+## $ CLIMATE           &lt;fct&gt; Temperate/Tropical, Tropical, Tropical, Trop...
+## $ BIOME_MAP         &lt;fct&gt; Tropical and subtropical moist broadleaf for...
+## $ ID_DATASETS       &lt;int&gt; 229, 393, 393, 393, 393, 393, 392, 392, 392,...
+## $ TAXA              &lt;fct&gt; Mammals, Mammals, Mammals, Mammals, Mammals,...
+## $ ORGANISMS         &lt;fct&gt; Bat, bats, bats, bats, bats, bats, bats, bat...
+## $ TITLE             &lt;fct&gt; Bats (Mammalia Chiroptera) in restinga in th...
+## $ AB_BIO            &lt;fct&gt; AB, A, A, A, A, A, A, A, A, A
+## $ HAS_PLOT          &lt;fct&gt; Y, Y, Y, Y, Y, Y, Y, Y, Y, Y
+## $ DATA_POINTS       &lt;int&gt; 10, 5, 5, 5, 5, 5, 3, 3, 3, 3
+## $ START_YEAR        &lt;int&gt; 2006, 1997, 1997, 1997, 1997, 1997, 2003, 20...
+## $ END_YEAR          &lt;int&gt; 2016, 2013, 2013, 2013, 2013, 2013, 2005, 20...
+## $ CENT_LAT          &lt;dbl&gt; -28.608900, -2.386381, -2.386381, -2.386381,...
+## $ CENT_LONG         &lt;dbl&gt; -48.98125, -59.91877, -59.91877, -59.91877, ...
+## $ NUMBER_OF_SPECIES &lt;int&gt; 13, 45, 45, 45, 45, 45, 43, 43, 43, 43
+## $ NUMBER_OF_SAMPLES &lt;int&gt; 16, 225, 225, 225, 225, 225, 452, 452, 452, 452
+## $ NUMBER_LAT_LONG   &lt;int&gt; 2, 12, 12, 12, 12, 12, 17, 17, 17, 17
+## $ TOTAL             &lt;int&gt; 177, 1380, 1380, 1380, 1380, 1380, 1585, 158...
+## $ GRAIN_SIZE_TEXT   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ GRAIN_SQ_KM       &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+## $ AREA_SQ_KM        &lt;dbl&gt; 0.0126637, 96.6343980, 96.6343980, 96.634398...
+## $ AB_TYPE           &lt;int&gt; 1, 1, 1, 1, 1, 1, 6, 6, 6, 6
+## $ BIO_TYPE          &lt;int&gt; 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ SAMPLE_TYPE       &lt;int&gt; 101, 177, 177, 177, 177, 177, 176, 176, 176,...
+## $ ID_CONTACTS       &lt;int&gt; 229, 394, 394, 394, 394, 394, 393, 393, 393,...
+## $ CONTACT_1         &lt;fct&gt; Fernando Carvalho, Ricardo Rocha, Ricardo Ro...
+## $ CONTACT_2         &lt;fct&gt; Fernando Carvalho, Adria Lopez-Baucells, Adr...
+## $ CONT_1_MAIL       &lt;fct&gt; fernando_bats@yahoo.com.br, ricardo.nature@g...
+## $ CONT_2_MAIL       &lt;fct&gt; f.carvalho@unesc.net, adria.baucells@gmail.c...
+## $ LICENSE           &lt;fct&gt; ODbL, CC-by, CC-by, CC-by, CC-by, CC-by, CC-...
+## $ WEB_LINK          &lt;fct&gt; None, None, None, None, None, None, None, No...
+## $ DATA_SOURCE       &lt;fct&gt; Contacted author directly, Contributed direc...
+## $ ID_METHODS        &lt;int&gt; 229, 394, 394, 394, 394, 394, 393, 393, 393,...
+## $ METHODS           &lt;fct&gt; "Bat individuals were collected from 2006 to...
+## $ SUMMARY_METHODS   &lt;fct&gt; nets, Mist-nets, Mist-nets, Mist-nets, Mist-...
+## $ ID_CURATION       &lt;int&gt; 229, 393, 393, 393, 393, 393, 392, 392, 392,...
+## $ LINK_ID           &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ COMMENTS          &lt;fct&gt; 1. Name of plots: 1: Jabuticabeira 2: Morro ...
+## $ DATE_STUDY_ADDED  &lt;fct&gt; Aug-16, Aug-17, Aug-17, Aug-17, Aug-17, Aug-...
+## $ ID_ABUNDANCE      &lt;int&gt; 1, 1, 1, 1, 1, 1, 6, 6, 6, 6
+## $ ABUNDANCE_TYPE    &lt;fct&gt; Count, Count, Count, Count, Count, Count, Me...
+## $ ID_BIOMASS        &lt;int&gt; 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ BIOMASS_TYPE      &lt;fct&gt; Weight, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ ID_SAMPLE         &lt;int&gt; 101, 177, 177, 177, 177, 177, 176, 176, 176,...
+## $ ID_TREAT          &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
+## $ SAMPLE_DESC_NAME  &lt;fct&gt; year_plot, lat_long_habitat_fragmentSize_sea...
+## $ ID_CITATION1      &lt;int&gt; 314, 596, 597, 598, 599, 600, 592, 593, 594,...
+## $ CITATION_LINE     &lt;fct&gt; "Carvalho, F., Zocche, J.J. &amp; MendonÃ§a, R.Ã...
+```
+
+---
+
+# Melihat variasi data
+
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(mamtrop) +
+  geom_histogram(aes(ABUNDANCE), binwidth = 10)
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Melihat kovariasi data
+
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(mamtrop) +
+  geom_jitter(aes(x=ABUNDANCE,y=BIOMASS))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+---
+
 # Bagaimana cara melihat tren kelimpahan?
 
+&lt;br&gt;&lt;br&gt;
 --
 
 sumbu x adalah waktu
@@ -545,8 +840,25 @@ sumbu x adalah waktu
 
 sumbu y adalah kelimpahan
 
+--
+
+
+```r
+ggplot(mamtrop) +
+  geom_jitter(aes(x=YEAR,y=ABUNDANCE))
+```
+
+![](presentasi_eksplorasiDataBiodiversitas_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
 ---
 class: center, middle
+
+# Apalagi yang dapat dieksplor?
+
+### Salurkan kode Anda dalam kopdar!
+
+---
+class: inverse, center, middle
 
 # Terima kasih!
 

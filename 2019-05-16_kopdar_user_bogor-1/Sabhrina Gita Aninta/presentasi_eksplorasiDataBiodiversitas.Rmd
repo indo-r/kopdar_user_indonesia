@@ -7,12 +7,44 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     css: ["default", "kunoichi", "rladies", "rladies-fonts"]
+    seal: false
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
 ---
 
+class: title-slide-custom
+
+<div class="my-logo-right"></div> 
+
+```{css, echo=FALSE}
+.my-logo-right {
+content: "";
+    position: absolute;
+    top: 15px;
+    right:   8px;
+    height: 40px;
+    width: 120px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png);
+}
+
+.title-slide-custom .remark-slide-number {
+  display: none;
+}
+```
+
+<br><br><br>
+# R untuk Eksplorasi Data Biodiversitas
+
+<br><br> 
+## Sabhrina Gita Aninta
+### Tambora Muda Indonesia / Komunitas R Indonesia
+### 2019/05/16 (updated: `r Sys.Date()`)
+
+---
 # Teknis tutorial
 
 Silakan memulai dari membuka project baru dari Rstudio:
@@ -59,6 +91,7 @@ Image source: [Clipart Library](http://clipart-library.com/clipart/241546.htm)
 
 # Apa itu Data Biodiversitas?
 
+<br><br>
 Kata "biodiversitas" dalam bahasa Indonesia baku umum dikenal dalam frase "keanekaragaman hayati" atau disingkat "kehati".
 
 --
@@ -85,27 +118,27 @@ Data biodiversitas ada berbagai macam:
 
 # Mengapa data biodiversitas?
 
-Seluruh hidup kita bergantung kepada biodiversitas:
+<br><br>
 
---
+.pull-left[
+Seluruh hidup kita bergantung kepada biodiversitas:
 
 - air bersih
 
---
 
 - udara bersih
 
---
 
 - makanan
 
---
-
 - tempat tinggal
 
---
-
 - kesehatan
+]
+
+.pull-right[
+![](http://www.fao.org/fileadmin/user_upload/faowater/images/newpubs/IES1b.jpg)
+]
 
 --
 
@@ -115,11 +148,12 @@ Manajemen biodiversitas yang baik memerlukan manajemen data biodiversitas yang b
 
 # Pangkalan data (*database*) kehati
 
+<br><br>
 Era informasi memungkinkan (dan menuntut) kita memanajemen informasi dengan sistematis dan integratif agar data dapat diakses dan digunakan kembali oleh banyak orang.
 
 --
 
-Berbagai pangkalan data kehati tersebar di dalam jaringan, ini beberapa yang saya tahu:
+Berbagai pangkalan data kehati tersebar di dalam jaringan:
 
 --
 
@@ -153,7 +187,8 @@ Yang lokal:
 
 # Komponen data kehati
 
-Bagi yang belum familiar dengan data kehati, mari kita kenalan dulu dengan komponen data kehati:
+<br><br>
+Data kehati memiliki berbagai macam atribut:
 
 --
 
@@ -188,7 +223,7 @@ Bagi yang belum familiar dengan data kehati, mari kita kenalan dulu dengan kompo
 
 # Unduh data dari pangkalan
 
-Beberapa pangkalan menyediakan data yang langsung dapat diunduh dari dalam jaringan setelah melakukan *log in* terlebih dulu.
+Beberapa pangkalan menyediakan data yang langsung dapat diunduh dari dalam jaringan setelah pengguna melakukan *log in*.
 
 --
 
@@ -212,11 +247,11 @@ head(buffaloData)
 
 # Unduh data dari pangkalan
 
-Menggunakan `rgbif::occ_search()` kita hanya akan mendapat maksimal 500 data perjumpaan, bukan seluruh data yang ada.
+Menggunakan `rgbif::occ_search()` kita hanya akan mendapat maksimal 500 data perjumpaan.
 
 --
 
-Jika ingin memperoleh seluruh data, kita harus mengunduh langsung dari situs GBIF<sup>1</sup> atau dapat menggunakan menggunakan `rgbif::occ_download()`<sup>2</sup>.
+Seluruh data hanya dapat diperoleh langsung dari situs GBIF<sup>1</sup> atau `rgbif::occ_download()`<sup>2</sup>.
 
 --
 
@@ -226,9 +261,9 @@ Lebih banyak tentang menggunakan package `rgbif` dapat dilihat di [sini](https:/
 
 .footnote[
 
-[1] Untuk mengunduh data dari GBIF, kita sudah harus mendaftar di gbif.org, menyediakan username dan password, lalu *log in* sebelum unduh.
+[1] Sudah harus mendaftar di gbif.org, menyediakan username dan password, lalu *log in* sebelum unduh.
 
-[2] Fungsi `rgbif::occ_download()` sedang mengalami isu yang dilaporkan per 16/05/2019. Jika ingin menggunakan fungsi ini, kita harus lebih dulu mengatur `Sys.setenv(GBIF_USER="username", GBIF_PWD="password", GBIF_EMAIL="e-mail")`
+[2] Jika ingin menggunakan fungsi ini, kita harus lebih dulu mengatur `Sys.setenv(GBIF_USER="username", GBIF_PWD="password", GBIF_EMAIL="e-mail")` namun saat ini fungsi tersebut sedang bermasalah per 16/05/2019. 
 
 ]
 
@@ -241,6 +276,7 @@ class: center, middle, inverse
 
 # Apa itu eksplorasi data?
 
+<br><br>
 Eksplorasi data adalah siklus iteratif:
 
 1. Membuat pertanyaan terkait data
@@ -257,11 +293,11 @@ Eksplorasi data adalah siklus iteratif:
 
 # Beberapa pertanyaan untuk memulai
 
+<br><br>
 1. Variasi macam apa yang ada dalam variabel-variabel data saya?
 
 > Variasi adalah kecenderungan perubahan nilai dalam suatu variabel
 
---
 
 2. Kovariasi macam apa yang ada di antara variabel-variabel dalam data saya?
 
@@ -300,6 +336,7 @@ Untuk materi kopdar ini, kita akan menggunakan ggplot2
 
 # Yang istimewa dari ggplot: *grammar*
 
+<br><br>
 Sintaks atau struktur kode dalam `ggplot2` sedemikian rupa sehingga sangat mudah untuk membuat grafik yang kompleks.
 
 
@@ -326,23 +363,26 @@ ggplot(cars) +
 
 # Data yang akan kita gunakan
 
-Dalam eksplorasi data kali ini, kita akan menggunakan data yang sudah saya siapkan, yakni data kelelawar Sulawesi yang saya unduh dan bersihkan dari [GBIF](https://www.gbif.org).
+Dalam eksplorasi data kali ini, kita akan menggunakan data yang sudah saya siapkan: 
+
+1. Data kualitatif berupa data perjumpaan kelelawar Sulawesi dari [GBIF](https://www.gbif.org).
 
 ```{r ambilData}
 lawar<-read.csv("input/bat.csv")
 ```
 
-Kita juga akan mengeksplorasi data kuantitatif yaitu jumlah dan kelimpahan kelelawar tropis yang saya unduh dari [BioTIME](http://biotime.st-andrews.ac.uk)
+2. Data kuantitatif berupa jumlah dan kelimpahan kelelawar tropis dari [BioTIME](http://biotime.st-andrews.ac.uk)
 
 ```{r}
 mamtrop<-read.csv("input/biotime_rawdata.csv")
+mamtrop_met<-read.csv("input/biotime_metadata.csv")
 ```
 
 ---
 
 # Mengapa kelelawar?
 
-
+<br><br>
 Kelelawar memiliki banyak manfaat dalam ekosistem:
 
 .pull-left[
@@ -375,7 +415,9 @@ class: inverse, middle, center
 
 # Cek bentuk data
 
-Langkah pertama dalam eksplorasi data adalah memahami struktur data, ada kolom apa saja? Apa kelas datanya? Hal ini dapat dilakukan dengan mudah melalui package `dplyr`.
+Langkah pertama dalam eksplorasi data adalah memahami struktur data: ada kolom apa saja? apa kelas datanya?
+
+Hal ini dapat dilakukan dengan mudah melalui package `dplyr`.
 
 ```{r dataCleaning, message=FALSE}
 library(dplyr)
@@ -443,10 +485,7 @@ Apa observasi penting dari data ini?
 
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
 
-
 Tampak bahwa data perjumpaan memang bias pada tahun 1970an. Spesimen tidak merata ada di setiap tahun.
-
-Grafik tampak kosong sehingga tidak ada gunanya menskala tahun. 
 
 Tahun bisa diubah menjadi faktor yang bersifat kategori alih-alih angka kuantitatif.
 
@@ -462,7 +501,7 @@ ggplot(data=lawar) +
 
 # Eksplorasi data: distribusi perjumpaan berdasarkan tahun
 
-Tapi, data tahun tidak tepat ditampilkan demikian karena akan menimbulkan persepsi distribusi kekayaan spesies yang berubah seiring waktu padahal ada bias pencuplikan. 
+Penampilan data tahun yang demikian akan menimbulkan persepsi distribusi kekayaan spesies yang berubah seiring waktu padahal ada bias pencuplikan.
 
 Kita ambil saja interval tahun yang kontinu, yakni dari tahun 1972 sampai dengan 1976.
 
@@ -487,6 +526,10 @@ lawar %>% filter(1972<=year & year <=1976) %>%
   geom_bar(aes(x=year), na.rm=T)
 ```
 
+--
+
+Apakah sudah tepat menyimpulkan tren perubahan jumlah spesies dari data ini?
+
 ---
 class: inverse, center, middle
 
@@ -497,8 +540,7 @@ class: inverse, center, middle
 
 # Apa yang harus kita lakukan?
 
-
-
+<br><br>
 --
 
 Cek data apakah sudah terbaca dengan benar
@@ -516,22 +558,28 @@ Visualisasikan data yang ingin kita eksplor
 
 # Mari kita lihat ada variabel apa saja
 
-
-
+<br><br>
 Apa saja fungsi yang dapat kita gunakan?
 
 --
 
 ```{r}
-
 glimpse(mamtrop)
+```
+
+---
+
+# Mari kita lihat ada variabel apa saja
+
+```{r}
+glimpse(mamtrop_met)
 ```
 
 ---
 
 # Melihat variasi data
 
-
+<br><br>
 ```{r, fig.height=4}
 ggplot(mamtrop) +
   geom_histogram(aes(ABUNDANCE), binwidth = 10)
@@ -542,6 +590,7 @@ ggplot(mamtrop) +
 
 # Melihat kovariasi data
 
+<br><br>
 ```{r, fig.height=4}
 ggplot(mamtrop) +
   geom_jitter(aes(x=ABUNDANCE,y=BIOMASS))
@@ -551,8 +600,7 @@ ggplot(mamtrop) +
 
 # Bagaimana cara melihat tren kelimpahan?
 
-
-
+<br><br>
 --
 
 sumbu x adalah waktu
