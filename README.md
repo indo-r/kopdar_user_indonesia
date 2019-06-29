@@ -33,4 +33,4 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 
 ### 2019-06-28 Kopdar useR! Bandung 3 @ Bukalapak R&D Office
 * [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Ayu%20Purwarianti/NLP%202019.pdf) oleh Ayu Purwarianti
-* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah/Meetup%20useR%20Indonesia%20Bandung%2028_06_19) oleh Fiqry Revadiansyah
+* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah/Meetup%20useR%20Indonesia%20Bandung%2028_06_19.pdf) oleh Fiqry Revadiansyah
