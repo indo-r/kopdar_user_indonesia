@@ -26,3 +26,11 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 
 ### 2019-05-18 Kopdar useR! Bogor 1 @ Institut Pertanian Bogor
 * [R untuk Eksplorasi Data Biodiversitas](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-18_kopdar-user-bogor-1/Sabhrina%20Gita%20Aninta/presentasi_eksplorasiDataBiodiversitas.pdf) oleh Sabhrina Gita Aninta
+
+### 2019-06-22 Kopdar useR! Yogyakarta 1 @ Sadasa Academy
+* [User Level Access in Shinyapps (Free)](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/) oleh Muhammad Farkhan Novianto
+* [Graph Visualization Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/) oleh Canggih Puspo Wibowo
+
+### 2019-06-28 Kopdar useR! Bandung 3 @ Sadasa Academy
+* [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/) oleh Ayu Purwarianti
+* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/) oleh Fiqry Revadiansyah

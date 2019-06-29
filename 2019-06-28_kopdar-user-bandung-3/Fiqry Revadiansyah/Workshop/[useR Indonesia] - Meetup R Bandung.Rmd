@@ -1,0 +1,415 @@
+---
+title: "Deep Dive Into Facebook Prophet"
+author: "mrboneclinkz"
+date: "May 31, 2019"
+output: ioslides_presentation
+---
+
+```{r 1. Install and Load Packages}
+listlibraries = c("prophet","TSstudio","ggplot2","dplyr","xts")
+
+loadpkg = function(x){
+  options(warn=-1)
+  for(i in x){
+    tryCatch({
+      library(i,character.only = TRUE)
+    }, error = function(e){
+      cat("Installing ",i)
+      install.packages(i,dependencies = TRUE,repos='http://cran.us.r-project.org')
+      library(i,character.only = TRUE)
+    }
+    )}
+  options(warn=0)
+  cat("\014") 
+  cat("Successfully install and load all packages along with its dependencies")
+}
+
+loadpkg(listlibraries)
+```
+
+```{r 2. Configuration Global Variables}
+test_size <<- 0.15
+glob.alpha <<- 0.05
+set.seed(28062019)
+setwd("C:/Users/mrbon/Documents/BUKALAPAK/Speakership/useR meetup Bandung 28 Juni 2019/")
+```
+
+## Load and Data Exploration
+
+```{r 3a. Load and Data Exploration}
+df = read.csv("datameetupr.csv",header=T,sep=",")
+colnames(df) =  c("date","active_users")
+df = xts(df$active_users, order.by=as.Date(df$date,"%Y-%m-%d"))
+head(df)
+```
+```{r 3b. Load and Data Exploration}
+ts_plot(df)
+```
+
+```{r 3c. Load and Data Exploration}
+ts_heatmap(df)
+```
+
+```{r 3c. Load and Data Exploration}
+ts_seasonal(df, type = "normal")
+```
+```{r 3c. Load and Data Exploration}
+ts_quantile(df,period = "monthly")
+```
+
+
+
+
+
+## Facebook Prophet
+
+```{r 4a. Data setup for fbprophet}
+#Read All
+df_all = read.csv("datameetupr.csv",header=T,sep=",")
+colnames(df_all) = c("ds","y")
+df_all$ds = as.POSIXct((df_all$ds),tz = "GMT",format="%Y-%m-%d")
+head(df_all)
+```
+
+```{r 4b. Pembagian Training dan Testing Data}
+#Data Training
+split_boundary = (1-test_size)*dim(df_all)[1]
+df_train = df_all[1:split_boundary,]
+tail(df_train)
+
+#Data Testing
+df_test = df_all[(split_boundary+1):dim(df_all)[1],]
+head(df_test)
+```
+```{r 4c. First Model (Vanilla)}
+#Read All
+model_prophet = prophet(df_train)
+summary(model_prophet)
+```
+```{r 4c. First Model (Vanilla) - Prediction }
+future = make_future_dataframe(model_prophet, periods = 30)
+forecast = predict(model_prophet, future)
+```
+
+
+```{r 4d. Investigate Changepoints}
+add_changepoints_to_plot <- function(m, threshold = 0.01, cp_color = "red",
+                               cp_linetype = "dashed", trend = TRUE, ...) {
+  layers <- list()
+  if (trend) {
+    trend_layer <- ggplot2::geom_line(
+      ggplot2::aes_string("ds", "trend"), color = cp_color, ...)
+    layers <- append(layers, trend_layer)
+  }
+  signif_changepoints <- m$changepoints[abs(m$params$delta) >= threshold]
+  cp_layer <- ggplot2::geom_vline(
+    xintercept = as.integer(signif_changepoints), color = cp_color,
+    linetype = cp_linetype, ...)
+  layers <- append(layers, cp_layer)
+  return(layers)
+}
+plot(model_prophet, forecast)+ add_changepoints_to_plot(model_prophet)
+```
+
+```{r 4e. Investigate Plot Components}
+prophet_plot_components(model_prophet, forecast)
+```
+```{r 4f. Tune Models}
+changepoints_in = c("2013-06-19","2013-07-05","2014-06-05","2014-06-21")
+lebaran = tibble(
+  holiday = 'lebaran',
+  ds = as.Date(c("2013-06-25","2014-06-15")),
+  lower_window = 0,
+  upper_window = 1
+)
+
+newyear = tibble(
+  holiday = 'tahunbaru',
+  ds = as.Date(c("2013-12-31","2014-12-31")),
+  lower_window = 0,
+  upper_window = 1
+)
+holidays = bind_rows(lebaran,newyear)
+head(holidays)
+
+```
+
+```{r 4f. Define fine-tuned fbprophet model}
+model_tuned = prophet(df_train,
+                      holidays = holidays,
+                      holidays.prior.scale=0.5,
+                      changepoints=changepoints_in,
+                      changepoint.prior.scale=0.01,
+                      weekly.seasonality=T,
+                      daily.seasonality=F,
+                     seasonality.mode = "multiplicative"
+                      )
+future = make_future_dataframe(model_tuned, periods = 180, freq = 'days')
+forecast = predict(model_tuned, future)
+plot(model_tuned, forecast) + add_changepoints_to_plot(model_tuned)
+```
+
+```{r 5a. Automatic Hyperparameter Tuning}
+scorer_MAPE = function(y_pred,y_true){
+    scorer = mean(abs((y_true-y_pred)/y_true) * 100.00)
+    return(scorer)
+}
+
+scorer_MdAPE = function(y_pred,y_true){
+    scorer = median(abs((y_true-y_pred)/y_true) * 100.00)
+    return(scorer)
+}
+
+scorer_MAE = function(y_pred,y_true){
+    scorer = mean(abs(y_true - y_pred))
+    return(scorer)
+}
+
+scorer_MdAE = function(y_pred,y_true){
+    scorer = median(abs(y_true - y_pred))
+    return(scorer)
+}
+
+scorer_MSE = function(y_pred,y_true){
+    scorer = mean((y_true-y_pred)^2)
+    return(scorer)
+}
+
+scorer_RMSE = function(y_pred,y_true){
+    scorer = sqrt(mean((y_true-y_pred)^2))
+    return(scorer)
+}
+
+prophet_track_model = function(model=NULL,
+                          df=NULL,
+                          train_test_split=0.15,
+                          metrics=c("mape","mdape","mse","rmse","mae","mdae"),
+                          verbose=TRUE){
+    metrics = ifelse(length(metrics)==0,"mape",metrics)
+    
+    split_boundary = (1-train_test_split)*dim(df)[1]
+    
+    df_train = tibble(ds = df[1:split_boundary,]$ds, y=df[1:split_boundary,]$y)
+    df_train$ds = as.Date(df_train$ds,"%Y-%m-%d")
+    df_test = tibble(ds = df[(split_boundary+1):dim(df)[1],]$ds, y=df[(split_boundary+1):dim(df)[1],]$y)
+    df_test$ds = as.Date(df_test$ds,"%Y-%m-%d")
+    
+    
+    periods = dim(df_test)[1]
+    
+    date_boundary = as.POSIXct(dplyr::last(df_train$ds),tz = "GMT",format="%Y-%m-%d")
+    
+    future = make_future_dataframe(model, periods=periods,freq="days")
+    
+    
+    pred_df = predict(model, future)
+    
+    y_pred =tibble(date=pred_df$ds,forecast=(pred_df$yhat))
+    y_pred$yearmonth=as.yearmon(y_pred$date)
+    colnames(y_pred)<-c("ds","forecast","yearmonth")
+    y_pred_train = y_pred %>%
+        filter(ds < date_boundary)
+    y_pred_test = y_pred %>%
+        filter(ds >= date_boundary)
+    
+    y_pred_train$ds = as.Date(y_pred_train$ds,"%Y-%m-%d",tz = "GMT")
+    y_pred_test$ds = as.Date(y_pred_test$ds,"%Y-%m-%d",tz = "GMT")
+    
+    train_predict=na.omit(merge(df_train,y_pred_train,by="ds",all.x=T))
+    test_predict=na.omit(merge(df_test,y_pred_test,by="ds",all.x=T))
+    
+    #Default scorer: MAPE
+    registered_scorer = c("mape","mdape","mse","rmse","mdae","mae")
+    scorer_cat = ifelse(tolower(metrics)%in%registered_scorer,tolower(metrics),"mape")
+    
+    if(scorer_cat=="mape"){
+        scorer_train = scorer_MAPE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai MAPE Train:",round(scorer_train,4),"%","\n")
+        scorer_test = scorer_MAPE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai MAPE Test:",round(scorer_test,4),"%","\n")
+    }
+    if(scorer_cat=="mdape"){
+        scorer_train = scorer_MdAPE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai MdAPE Train:",round(scorer_train,4),"%","\n")
+        scorer_test = scorer_MdAPE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai MdAPE Test:",round(scorer_test,4),"%","\n")
+    }
+    if(scorer_cat=="mse"){
+        scorer_train = scorer_MSE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai MSE Train:",round(scorer_train,4),"\n")
+        scorer_test = scorer_MSE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai MSE Test:",round(scorer_test,4),"\n")
+    }
+    if(scorer_cat=="rmse"){
+        scorer_train = scorer_RMSE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai RMSE Train:",round(scorer_train,4),"\n")
+        scorer_test = scorer_RMSE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai RMSE Test:",round(scorer_test,4),"\n")
+    }
+    if(scorer_cat=="mae"){
+        scorer_train = scorer_MAE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai MAE Train:",round(scorer_train,4),"\n")
+        scorer_test = scorer_MAE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai MAE Test:",round(scorer_test,4),"\n")
+    }
+    if(scorer_cat=="mdae"){
+        scorer_train = scorer_MdAE(y_pred = train_predict$forecast, y_true = train_predict$y)
+        if(verbose) cat("Nilai MdAE Train:",round(scorer_train,4),"\n")
+        scorer_test = scorer_MdAE(y_pred = test_predict$forecast, y_true = test_predict$y)
+        if(verbose) cat("Nilai MdAE Test:",round(scorer_test,4),"\n")
+    }
+    
+    result=list("Metrics"=scorer_cat,"Score_Train"=scorer_train,"Score_Test"=scorer_test)
+    invisible(result)
+}
+```
+
+```{r 5b. Tune}
+model_1 = prophet(df_train, holidays = holidays,holidays.prior.scale = 2,daily.seasonality = F,yearly.seasonality=1)
+prophet_track_model(model = model_1,df=df_all,train_test_split=test_size,metrics="mape")
+```
+
+```{r 5c. Set Hyperparameter Space}
+n.changepoints = seq(from = 10,to=90,by=20)
+changepoint.range = seq(from = 0.25,to=1,by=0.25)
+changepoint.prior.scale = seq(from = 0.05,to=1,by=0.1)
+daily.seasonality = seq(from=0,to=7)
+weekly.seasonality = seq(from=0,to=28,by=7)
+yearly.seasonality = seq(from=0,to=2,by=1)
+holidays.prior.scale=seq(from=10,to=50,by=10)
+seasonality.mode = c("additive","multiplicative")
+
+hyperparameter_space = list("seasonality.mode"=seasonality.mode,
+                            "n.changepoints"=n.changepoints,
+                            "changepoint.range"=changepoint.range,
+                            "changepoint.prior.scale"=changepoint.prior.scale,
+                            "weekly.seasonality"=weekly.seasonality,
+                            "yearly.seasonality"=yearly.seasonality,
+                            "holidays.prior.scale"=holidays.prior.scale
+                            )
+hyperparameter_space
+```
+```{r 5d. Hyperparameter Tuning v1.01}
+tuning_prophet_model = function(df=NULL,
+                                holidays=NULL,
+                                train_test_split=0.15,
+                                metrics_use=c("mape","mdape","mse","rmse","mae","mdae"),
+                                hyperparameter_space=NULL,
+                                verbose = T){
+    
+    split_boundary = (1-train_test_split)*dim(df)[1]
+    
+    df_train = df[1:split_boundary,]
+    df_test = df[(split_boundary+1):dim(df)[1],]
+    
+    periods = dim(df_test)[1]
+    
+    start_time_all = Sys.time()
+    options(warn=-1)
+    param_lengths = length(hyperparameter_space)
+    hyperparameter_best = list()
+    metrics_curve = list()
+    model_test = prophet(df_train)
+    
+    
+    for(i in 1:param_lengths){
+        x = length(hyperparameter_space[[i]])
+        param_name = names(hyperparameter_space)[i]
+        lowest_selection_per_param = list() 
+
+        for(j in 1:x){
+            if(verbose){
+                cat("Param",param_name,"at:",hyperparameter_space[[param_name]][j],"\n")
+                }
+
+            par_n.changepoints = ifelse(param_name=="n.changepoints",hyperparameter_space[[param_name]][j],model_test[["n.changepoints"]])
+            par_daily.seasonality = ifelse(param_name=="daily.seasonality",hyperparameter_space[[param_name]][j],FALSE)
+            par_holidays.prior.scale = ifelse(param_name=="holidays.prior.scale",hyperparameter_space[[param_name]][j],model_test[["holidays.prior.scale"]])
+            par_changepoint.range = ifelse(param_name=="changepoint.range",hyperparameter_space[[param_name]][j],model_test[["changepoint.range"]])
+            par_changepoint.prior.scale = ifelse(param_name=="changepoint.prior.scale",hyperparameter_space[[param_name]][j],model_test[["changepoint.prior.scale"]])
+            par_weekly.seasonality = ifelse(param_name=="weekly.seasonality",hyperparameter_space[[param_name]][j],model_test[["weekly.seasonality"]])
+            par_yearly.seasonality = ifelse(param_name=="yearly.seasonality",hyperparameter_space[[param_name]][j],model_test[["yearly.seasonality"]])
+            par_seasonality.mode = ifelse(param_name=="seasonality.mode",hyperparameter_space[[param_name]][j],model_test[["seasonality.mode"]])
+            
+            tryCatch({
+                model_loop = prophet(df_train, 
+                                     holidays = holidays,
+                                     n.changepoints=ifelse(length(hyperparameter_best[["n.changepoints"]])==0,par_n.changepoints,hyperparameter_best[["n.changepoints"]]),
+                                     daily.seasonality=ifelse(length(hyperparameter_best[["daily.seasonality"]])==0,par_daily.seasonality,hyperparameter_best[["daily.seasonality"]]),
+                                     holidays.prior.scale=ifelse(length(hyperparameter_best[["holidays.prior.scale"]])==0,par_holidays.prior.scale,hyperparameter_best[["holidays.prior.scale"]]),
+                                     changepoint.range=ifelse(length(hyperparameter_best[["changepoint.range"]])==0,par_changepoint.range,hyperparameter_best[["changepoint.range"]]),
+                                     changepoint.prior.scale=ifelse(length(hyperparameter_best[["changepoint.prior.scale"]])==0,par_changepoint.prior.scale,hyperparameter_best[["changepoint.prior.scale"]]),
+                                     weekly.seasonality=ifelse(length(hyperparameter_best[["weekly.seasonality"]])==0,par_weekly.seasonality,hyperparameter_best[["weekly.seasonality"]]),
+                                     yearly.seasonality=ifelse(length(hyperparameter_best[["yearly.seasonality"]])==0,par_yearly.seasonality,hyperparameter_best[["yearly.seasonality"]]),
+                                     seasonality.mode=ifelse(length(hyperparameter_best[["seasonality.mode"]])==0,par_seasonality.mode,hyperparameter_best[["seasonality.mode"]])
+                                    )
+                result_cache = prophet_track_model(model = model_loop,
+                                              df=df,
+                                              train_test_split=train_test_split,
+                                              metrics = metrics_use,
+                                              verbose=verbose)
+                
+                lowest_selection_per_param[j] = result_cache$Score_Test
+            }, error = function(e){
+                cat("Found an error at this param:",param_name,"with a value of",j,"Try to skip.","\n")
+            })
+            
+        }
+        lowest_selection_per_param = unlist(lowest_selection_per_param)
+        best_lowest_per_param = which(lowest_selection_per_param==min(lowest_selection_per_param))
+        lowest_metrics_per_param = lowest_selection_per_param[best_lowest_per_param]
+        best_param_loop = hyperparameter_space[[param_name]][best_lowest_per_param][1]
+        
+        if(verbose){
+            if(tolower(metrics_use)%in%c("mape","mdape")){
+                cat("Param",param_name,"best lowest for",round(lowest_metrics_per_param,2),"%",metrics_use,"at",best_param_loop,"\n")
+            } else{
+                cat("Param",param_name,"best lowest for",round(lowest_metrics_per_param,2),metrics_use,"at",best_param_loop,"\n")
+            }
+        }
+        metrics_curve[i] = lowest_metrics_per_param
+        hyperparameter_best[[param_name]] = best_param_loop 
+    }
+    
+    if(length(holidays)!=0) hyperparameter_best$holidays = holidays
+    
+    options(warn=0)
+    if(verbose) cat("\014")
+    metrics_curve = unlist(metrics_curve)
+    
+    end_time_all = Sys.time()
+    end_time_taken = end_time_all - start_time_all
+    
+    if(verbose) cat("Total taken time:",end_time_taken,"seconds.","\n")
+    
+    result = list()
+    result$metrics_history = metrics_curve
+    result$metrics_used    = metrics_use
+    result$best_params     = hyperparameter_best
+    cat("Tuning finished!","\n")
+    invisible(result)
+}
+
+model_prophet_tuningku = tuning_prophet_model(df = df_all,
+                     holidays = holidays,
+                     train_test_split = 0.15,
+                     metrics_use = "mape",
+                     hyperparameter_space = hyperparameter_space,
+                     verbose=T)
+
+plot(model_prophet_tuningku$metrics_history,type="o")
+```
+```{r 5e. Evaluation }
+plot(model_prophet_tuningku$metrics_history,type="o")
+```
+
+
+
+```{r 5b. Forecast}
+fine_tune_model = do.call(prophet,c(df_train,model_prophet_tuningku$best_params))
+fine_tune_model = fit.prophet(fine_tune_model,df_train)
+
+future = make_future_dataframe(fine_tune_model, periods = 180, freq = 'days')
+forecast = predict(fine_tune_model, future)
+plot(fine_tune_model, forecast) + add_changepoints_to_plot(fine_tune_model)
+```
