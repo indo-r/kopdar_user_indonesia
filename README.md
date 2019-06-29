@@ -31,6 +31,6 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 * [User Level Access in Shinyapps (Free)](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/) oleh Muhammad Farkhan Novianto
 * [Graph Visualization Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/) oleh Canggih Puspo Wibowo
 
-### 2019-06-28 Kopdar useR! Bandung 3 @ Sadasa Academy
+### 2019-06-28 Kopdar useR! Bandung 3 @ Bukalapak R&D Office
 * [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/) oleh Ayu Purwarianti
 * [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/) oleh Fiqry Revadiansyah
