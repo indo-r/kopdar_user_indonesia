@@ -25,12 +25,16 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 * [Data Carpentry with Tidyverse](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-11_kopdar-user-jakarta-3/Muhammad%20Aswan%20Syahputra) oleh Muhammad Aswan Syahputra
 
 ### 2019-05-18 Kopdar useR! Bogor 1 @ Institut Pertanian Bogor
-* [R untuk Eksplorasi Data Biodiversitas](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-18_kopdar-user-bogor-1/Sabhrina%20Gita%20Aninta oleh Sabhrina Gita Aninta
+* [R untuk Eksplorasi Data Biodiversitas](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-05-18_kopdar-user-bogor-1/Sabhrina%20Gita%20Aninta) oleh Sabhrina Gita Aninta
 
 ### 2019-06-22 Kopdar useR! Yogyakarta 1 @ Sadasa Academy
-* [User Level Access in Shinyapps (Free)](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/Muhammad%20Farkhan%20Novianto) oleh Muhammad Farkhan Novianto
-* [Graph Visualization Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogya-1/Canggih%20Puspo%20Wibowo) oleh Canggih Puspo Wibowo
+* [User Level Access in Shinyapps (Free)](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogyakarta-1/) oleh Muhammad Farkhan Novianto
+* [Graph Visualization Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogyakarta-1/) oleh Canggih Puspo Wibowo
 
 ### 2019-06-28 Kopdar useR! Bandung 3 @ Bukalapak R&D Office
-* [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Ayu%20Purwarianti) oleh Ayu Purwarianti
-* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah) oleh Fiqry Revadiansyah
+* [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Ayu%20Purwarianti/NLP%202019.pdf) oleh Ayu Purwarianti
+* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah/Meetup%20useR%20Indonesia%20Bandung%2028_06_19.pdf) oleh Fiqry Revadiansyah
+
+### 2019-08-16 Kopdar useR! Yogyakarta 2 @ Sadasa Academy
+* [Data rectangling in R: a journey from JSON to CSV](https://speakerdeck.com/aswansyahputra/data-rectangling-in-r-a-journey-from-json-to-csv) oleh Muhammad Aswan Syahputra
+* [Web scraping in R](https://slides.com/eppofahmi/sadasascraping/fullscreen) oleh Ujang Fahmi
