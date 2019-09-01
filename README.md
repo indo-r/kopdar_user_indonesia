@@ -32,9 +32,13 @@ Repositori ini berisi salindia berserta berkas-berkas pendukung yang disampaikan
 * [Graph Visualization Analysis](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-22_kopdar-user-yogyakarta-1/) oleh Canggih Puspo Wibowo
 
 ### 2019-06-28 Kopdar useR! Bandung 3 @ Bukalapak R&D Office
-* [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Ayu%20Purwarianti/NLP%202019.pdf) oleh Ayu Purwarianti
-* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah/Meetup%20useR%20Indonesia%20Bandung%2028_06_19.pdf) oleh Fiqry Revadiansyah
+* [Natural Language Processing](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Ayu%20Purwarianti/) oleh Ayu Purwarianti
+* [Deep Dive into Facebook Prophet Model](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-06-28_kopdar-user-bandung-3/Fiqry%20Revadiansyah/) oleh Fiqry Revadiansyah
 
 ### 2019-08-16 Kopdar useR! Yogyakarta 2 @ Sadasa Academy
-* [Data rectangling in R: a journey from JSON to CSV](https://speakerdeck.com/aswansyahputra/data-rectangling-in-r-a-journey-from-json-to-csv) oleh Muhammad Aswan Syahputra
+* [Data rectangling in R: a journey from JSON to CSV](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-08-16_kopdar-user-yogyakarta-2/Muhammad%20Aswan%20Syahputra/) oleh Muhammad Aswan Syahputra
 * [Web scraping in R](https://slides.com/eppofahmi/sadasascraping/fullscreen) oleh Ujang Fahmi
+
+### 2019-08-31 Kopdar useR! Bandung 4 @ Institut Teknologi Bandung
+* [Extending RStudio with Git(Hub)](https://github.com/indo-r/kopdar_user_indonesia/blob/master/2019-08-31_kopdar-user-bandung-4/Muhammad%20Aswan%20Syahputra/) oleh Muhammad Aswan Syahputra
+* [Pendidikan Data Analytics dan Data Science di Indonesia](https://r-indonesia.id) oleh Manahan Siallagan
